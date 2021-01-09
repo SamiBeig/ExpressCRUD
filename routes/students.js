@@ -1,17 +1,19 @@
 import express from "express";
+import { v4 as uuidv4 } from 'uuid';
+import { userInfo } from "os";
 
 const router = express.Router();
 
 // Sample students array of objects
-const students = [
+let students = [
     {
-        id: 1,
+        id: uuidv4(),
         firstName: "James",
         lastName: "Bond",
         age: 16,
     },
     {
-        id: 2,
+        id: uuidv4(),
         firstName: "Anna",
         lastName: "Jones",
         age: 15,
@@ -26,5 +28,36 @@ const students = [
 router.get("/", (req, res) => {
     res.send(students);
 });
+
+// GET request -- retrieves a student by ID!
+router.get("/:id", (req, res) => {
+    const { id } = req.params;
+
+    const queryStudent = students.find((student) => student.id === id);
+
+    res.send(queryStudent);
+});
+
+// POST request -- adds a new student!
+router.post("/", (req, res) => {
+
+    // Takes in an expected student from request
+    const student = req.body;
+
+    // Create and add a new student into our mock database
+    const studentWithID = { id: uuidv4(), ...student, };
+    students.push(studentWithID);
+
+    res.send(`${student.firstName} has been added!`);
+});
+
+// DELETE request -- deletes a student by id!
+router.delete("/:id", (req, res) => {
+    const { id } = req.params;
+
+    students = students.filter((student) => student.id !== id);
+
+    res.send(`User with the ID ${id} was deleted!`);
+})
 
 export default router;
