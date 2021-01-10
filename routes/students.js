@@ -58,6 +58,28 @@ router.delete("/:id", (req, res) => {
     students = students.filter((student) => student.id !== id);
 
     res.send(`User with the ID ${id} was deleted!`);
+});
+
+// PATCH request -- updates a student by id!
+// Note: you can also use a PUT request
+router.patch("/:id", (req, res) => {
+    const { id } = req.params;
+    const { firstName, lastName, age } = req.body;
+
+    // Find user by id
+    const queryStudent = students.find(student => student.id === id);
+
+    if (firstName)
+        queryStudent.firstName = firstName;
+
+    if (lastName)
+        queryStudent.lastName = lastName;
+
+    if (age)
+        queryStudent.age = age;
+
+    res.send(queryStudent);
+
 })
 
 export default router;
